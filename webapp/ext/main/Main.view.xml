@@ -1,0 +1,206 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
+    xmlns:html="http://www.w3.org/1999/xhtml" controllerName="cyclecounting.ext.main.Main">
+    <Page id="Main" title="{i18n>MainTitle}" titleAlignment="Center">
+        <content>
+            <HBox id="idMainHBox" width="100%">
+                <items>
+                    <VBox id="idColumnLeftVBox" width="33%" class="sapUiSmallMargin" alignItems="Start" alignContent="Start">
+                        <items>
+                            <HBox id="idCountedUnitHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idCountedUnitText" text="{i18n>CountedUnit}" class="sapUiSmallMargin" />
+                                    <Input id="idCountedUnitInput" class="sapUiSmallMargin" type="Number"  />
+                                </items>
+                            </HBox>
+                            <HBox id="idMaterialHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idMaterialText" text="{i18n>Material}" class="sapUiSmallMargin" />
+                                    <Input id="idMaterialInput" class="sapUiSmallMargin" maxLength="40" change="onMaterialInputChange" />
+                                </items>
+                            </HBox>
+                            <HBox id="idDescriptionHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idDescriptionText" text="{i18n>Description}" class="sapUiSmallMargin" />
+                                    <Input id="idDescriptionInput" class="sapUiSmallMargin" maxLength="40" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idBatchHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idBatchText" text="{i18n>Batch}" class="sapUiSmallMargin" />
+                                    <Input id="idBatchInput" class="sapUiSmallMargin" maxLength="10" change="onInputForSAPQtyChange"/>
+                                </items>
+                            </HBox>
+                            <HBox id="idStockCategoryHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idStockCategoryText" text="{i18n>StockCategory}" class="sapUiSmallMargin" />
+                                    <Input id="idStockCategoryInput" class="sapUiSmallMargin" maxLength="1" change="onInputForSAPQtyChange" />
+                                </items>
+                            </HBox>
+                            <HBox id="idSpecialStockIndicatorHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idSpecialStockIndicatorText" text="{i18n>SpecialStockIndicator}" class="sapUiSmallMargin" />
+                                    <Input id="idSpecialStockIndicatorInput" class="sapUiSmallMargin" maxLength="1" change="onInputForSAPQtyChange" />
+                                </items>
+                            </HBox>
+                            <HBox id="idSpecialStockNumberHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idSpecialStockNumberText" text="{i18n>SpecialStockNumber}" class="sapUiSmallMargin" />
+                                    <Input id="idSpecialStockNumberInput" class="sapUiSmallMargin" maxLength="16" change="onInputForSAPQtyChange" />
+                                </items>
+                            </HBox>
+                            <HBox id="idSAPDifferenceHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idSAPDifferenceText" text="{i18n>SAPDifference}" class="sapUiSmallMargin" />
+                                    <Input id="idSAPDifferenceInput" class="sapUiSmallMargin" editable="false" type="Number"/>
+                                </items>
+                            </HBox>
+                            <HBox id="idGroupIDHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idGroupIDText" text="{i18n>GroupID}" class="sapUiSmallMargin" />
+                                    <Input id="idGroupIDInput" class="sapUiSmallMargin" editable="false"/>
+                                </items>
+                            </HBox>
+                            <HBox id="idRemarkHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idRemarkText" text="{i18n>Remark}" class="sapUiSmallMargin" />
+                                    <Input id="idRemarkInput" class="sapUiSmallMargin" />
+                                </items>
+                            </HBox>
+                        </items>
+                    </VBox>
+                    <VBox id="idColumnCenterVBox" width="33%" class="sapUiSmallMargin" alignItems="Start" alignContent="Start">
+                        <items>
+                            <HBox id="idTotalCountedHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idTotalCountedText" text="{i18n>TotalCounted}" class="sapUiSmallMargin" />
+                                    <Input id="idTotalCountedInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idStateHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idStateText" text="{i18n>State}" class="sapUiSmallMargin" />
+                                    <Input id="idStateInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idDescription2HBox" alignItems="Center">
+                                <items>
+                                    <Text id="idDescription2Text" text="{i18n>Description2}" class="sapUiSmallMargin" />
+                                    <Input id="idDescription2Input" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idScheduleHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idScheduleText" text="{i18n>Schedule}" class="sapUiSmallMargin" />
+                                    <Input id="idScheduleInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idDifferenceQtyHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idDifferenceQtyText" text="{i18n>DifferenceQty}" class="sapUiSmallMargin" />
+                                    <Input id="idDifferenceQtyInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idRequestDateHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idRequestDateText" text="{i18n>RequestDate}" class="sapUiSmallMargin" />
+                                    <Input id="idRequestDateInput" class="sapUiSmallMargin" editable="false" type="Date" />
+                                </items>
+                            </HBox>
+                            <HBox id="idRequestorHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idRequestorText" text="{i18n>Requestor}" class="sapUiSmallMargin" />
+                                    <Input id="idRequestorInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idLastModifyHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idLastModifyText" text="{i18n>LastModify}" class="sapUiSmallMargin" />
+                                    <Input id="idLastModifyInput" class="sapUiSmallMargin" editable="false" maxLength="12"/>
+                                </items>
+                            </HBox>
+                            <HBox id="idToleranceHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idToleranceText" text="{i18n>Tolerance}" class="sapUiSmallMargin" />
+                                    <Input id="idToleranceInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idOrderTypeHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idOrderTypeText" text="{i18n>OrderType}" class="sapUiSmallMargin" />
+                                    <Input id="idOrderTypeInput" class="sapUiSmallMargin" maxLength="5" editable="false" />
+                                </items>
+                            </HBox>
+                        </items>
+                    </VBox>
+                    <VBox id="idColumnRightVBox" width="33%" class="sapUiSmallMargin" alignItems="Start" alignContent="Start">
+                        <items>
+                            <HBox id="idLocationHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idLocationText" text="{i18n>Location}" class="sapUiSmallMargin" />
+                                    <Input id="idLocationInput" class="sapUiSmallMargin" maxLength="4" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idProblemHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idProblemText" text="{i18n>Problem}" class="sapUiSmallMargin" />
+                                    <Input id="idProblemInput" class="sapUiSmallMargin" maxLength="8" />
+                                </items>
+                            </HBox>
+                            <HBox id="idSiteHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idSiteText" text="{i18n>Site}" class="sapUiSmallMargin" />
+                                    <Input id="idSiteInput" class="sapUiSmallMargin" maxLength="4" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idSAPQtyHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idSAPQtyText" text="{i18n>SAPQty}" class="sapUiSmallMargin" />
+                                    <Input id="idSAPQtyInput" class="sapUiSmallMargin" editable="false" type="Number" />
+                                </items>
+                            </HBox>
+                            <HBox id="idDifferenceValueHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idDifferenceValueText" text="{i18n>DifferenceValue}" class="sapUiSmallMargin" />
+                                    <Input id="idDifferenceValueInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                            <HBox id="idPartTypeHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idPartTypeText" text="{i18n>PartType}" class="sapUiSmallMargin" />
+                                    <Input id="idPartTypeInput" class="sapUiSmallMargin" editable="false" maxLength="4" />
+                                </items>
+                            </HBox>
+                            <HBox id="idFulfilmentDateHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idFulfilmentDateText" text="{i18n>FulfilmentDate}" class="sapUiSmallMargin" />
+                                    <Input id="idFulfilmentDateInput" class="sapUiSmallMargin" editable="false" type="Date" />
+                                </items>
+                            </HBox>
+                            <HBox id="idDeadlineHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idDeadlineText" text="{i18n>Deadline}" class="sapUiSmallMargin" />
+                                    <Input id="idDeadlineInput" class="sapUiSmallMargin" editable="false" type="Date" />
+                                </items>
+                            </HBox>
+                            <HBox id="idCOGIHBox" alignItems="Center">
+                                <items>
+                                    <Text id="idCOGIText" text="{i18n>COGI}" class="sapUiSmallMargin" />
+                                    <Input id="idCOGIInput" class="sapUiSmallMargin" editable="false" />
+                                </items>
+                            </HBox>
+                        </items>
+                    </VBox>
+
+                </items>
+            </HBox>
+            <HBox id="idButtonsHBox" width="100%" justifyContent="Center" class="sapUiSmallMargin">
+                <items>
+                    <Button id="idJumpToCountingButton" icon="sap-icon://zoom-in" class="sapUiSmallMargin" press="onButtonJumpToCountingPress" />
+                    <Button id="idSaveWithoutSubmitButton" icon="sap-icon://drill-down" class="sapUiSmallMargin" press="onButtonSaveWithoutSubmitPress" />
+                    <Button id="idSaveAndSubmitButton" icon="sap-icon://save" class="sapUiSmallMargin" press="onButtonSaveAndSubmitPress" />
+                    <Button id="idDeleteButton" icon="sap-icon://delete" class="sapUiSmallMargin" press="onButtonClearDataPress" />
+                </items>
+            </HBox>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,55 @@
+specVersion: "3.1"
+metadata:
+  name: cyclecounting
+type: application
+framework:
+  name: SAPUI5
+  version: 1.135.0
+  libraries:
+    - name: sap.m
+    - name: sap.ui.core
+    - name: sap.fe.templates
+    - name: sap.fe.core
+    - name: sap.ushell
+    - name: themelib_sap_horizon
+server:
+  customMiddleware:
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300
+    - name: fiori-tools-preview
+      afterMiddleware: fiori-tools-appreload
+      configuration:
+        flp:
+          theme: sap_horizon
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertError: false
+        backend:
+          - path: /sap
+            url: http://10.6.168.44:8000
+            client: "300"
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /sap/opu/odata4/sap/zui_wm317_counting/srvd/sap/zr_wm317_counting/0001
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+        annotations: []
+    - name: fiori-tools-servestatic
+      afterMiddleware: compression
+      configuration:
+        paths:
+          - path: /resources/cyclecountingimoverplus
+            src: ..\cyclecountingimoverplus\webapp
+          - path: /appconfig
+            src: appconfig
+          - path: /resources/cockpit
+            src: ..\cockpit\webapp

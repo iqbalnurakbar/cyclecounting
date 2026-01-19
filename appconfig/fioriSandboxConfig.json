@@ -1,0 +1,9 @@
+{
+    "applications": {
+        "zcyclecountingimoverplus-display": {
+            "additionalInformation": "SAPUI5.Component=zcyclecountingimoverplus",
+            "applicationType": "URL",
+            "url": "../resources/zcyclecountingimoverplus"
+        }
+    }
+}
