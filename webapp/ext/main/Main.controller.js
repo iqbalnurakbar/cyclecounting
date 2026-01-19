@@ -48,12 +48,12 @@ sap.ui.define(
       "idBatchInput",
       "idCOGIInput",
       "idCountedUnitInput",
-      "idDeadlineInput",
+      "idDeadlineDatePicker",
       "idDescription2Input",
       "idDescriptionInput",
       "idDifferenceQtyInput",
       "idDifferenceValueInput",
-      "idFulfilmentDateInput",
+      "idFulfilmentDatePicker",
       "idGroupIDInput",
       "idLastModifyInput",
       "idLocationInput",
@@ -63,7 +63,7 @@ sap.ui.define(
       "idProblemInput",
       "idRemarkInput",
       "idRequestorInput",
-      "idRequestDateInput",
+      "idRequestDatePicker",
       "idSAPDifferenceInput",
       "idSAPQtyInput",
       "idSiteInput",
@@ -192,7 +192,7 @@ sap.ui.define(
             idOrderTypeInput: oResult.item_size,
             idSiteInput: oResult.site,
             idToleranceInput: oResult.tolerance,
-            idFulfilmentDateInput: oResult.fulfilment_date,
+            idFulfilmentDatePicker: oResult.fulfilment_date,
             idRemarkInput: oResult.remark,
             idProblemInput: oResult.problem,
             idCOGIInput: oResult.cogi,
@@ -204,10 +204,10 @@ sap.ui.define(
             idDifferenceQtyInput: oResult.difference,
             idTotalCountedInput: oResult.total_counted,
             idSAPDifferenceInput: oResult.sap_difference,
-            idRequestDateInput: oResult.request_date,
+            idRequestDatePicker: oResult.request_date,
             idMaterialInput: oResult.material,
             idBatchInput: oResult.batch,
-            idPartTypeInput: oResult.part_type
+            idPartTypeInput: oResult.part_type,
           });
 
           oView
@@ -422,11 +422,11 @@ sap.ui.define(
         updateTotalCounter(this.getView());
       },
 
-      onMaterialInputChange: function (oEvent) {
+      onInputMaterialChange: function (oEvent) {
         updateTotalCounter(this.getView());
         getMaterialDescription(this.getView());
         checkBatch(this.getView());
       },
     });
-  }
+  },
 );
