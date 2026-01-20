@@ -309,15 +309,12 @@ sap.ui.define(
               MessageToast.show("Save without Submitting...");
               updateTotalCounter(this.getView());
 
-              // Disable all fields except countedUnit
-              // ALL_INPUT_FIELD_IDS.forEach((id) => {
-              //   if (
-              //     this.getView().byId(id).getEditable() == true &&
-              //     id != "idCountedUnitInput"
-              //   ) {
-              //     this.getView().byId(id).setEditable(false);
-              //   }
-              // });
+              // Erase every editable field into empty
+              ALL_INPUT_FIELD_IDS.forEach((id) => {
+                if (this.getView().byId(id).getEditable() == true) {
+                  this.getView().byId(id).setValue("");
+                }
+              });
             }
           })
           .catch((err) => {
