@@ -41,6 +41,7 @@ sap.ui.define(
       request_id: "",
       plant: "",
       base_unit_of_measure: "",
+      cycle_wise: "",
     };
 
     // --- Field IDs for clearing ---
@@ -172,6 +173,7 @@ sap.ui.define(
           const oResult = oAction.getBoundContext().getObject();
           globalData.plant = oResult.plant;
           globalData.base_unit_of_measure = oResult.base_unit_of_measure;
+          globalData.cycle_wise = oResult.cycle_wise;
           // Material input logic
           if (oResult.request_type == "A" || oResult.cycle_wise == "L") {
             oView.byId("idMaterialInput").setValue("");
@@ -224,6 +226,11 @@ sap.ui.define(
     // --- Main Controller ---
     return PageController.extend("cyclecounting.ext.main.Main", {
       onButtonJumpToCountingPress: function (oEvent) {
+        if (globalData.cycle_wise === "L") {
+          MessageBox.error("Cycle Wise L is not allowed to Overplus");
+          return;
+        }
+
         MessageToast.show("Jumping to Counting...");
 
         try {
