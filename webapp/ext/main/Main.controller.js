@@ -1,6 +1,12 @@
 sap.ui.define(
-  ["sap/fe/core/PageController", "sap/m/MessageToast", "sap/m/MessageBox"],
-  function (PageController, MessageToast, MessageBox) {
+  [
+    "sap/fe/core/PageController",
+    "sap/m/MessageToast",
+    "sap/m/MessageBox",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+  ],
+  function (PageController, MessageToast, MessageBox, Filter, FilterOperator) {
     "use strict";
 
     // --- Utility Functions ---
@@ -61,7 +67,7 @@ sap.ui.define(
       "idMaterialInput",
       "idOrderTypeInput",
       "idPartTypeInput",
-      "idProblemInput",
+      "idProblemVhComboBox",
       "idRemarkInput",
       "idRequestorInput",
       "idRequestDatePicker",
@@ -103,7 +109,6 @@ sap.ui.define(
         .execute()
         .then(() => {
           const oResult = oAction.getBoundContext().getObject();
-          console.log(oResult);
           setInputValues(oView, {
             idSAPQtyInput: oResult.sap_quantity,
             idDifferenceValueInput: oResult.difference_value,
@@ -131,7 +136,6 @@ sap.ui.define(
         .execute()
         .then(() => {
           const oResult = oAction.getBoundContext().getObject();
-          console.log(oResult);
           oView.byId("idDescriptionInput").setValue(oResult.material_desc);
           oView.byId("idPartTypeInput").setValue(oResult.part_type);
         })
@@ -154,7 +158,6 @@ sap.ui.define(
         .execute()
         .then(() => {
           const oResult = oAction.getBoundContext().getObject();
-          console.log(oResult);
           oView.byId("idBatchInput").setEditable(oResult.batch_needed);
         })
         .catch((err) => {
@@ -185,7 +188,6 @@ sap.ui.define(
 
           oView.byId("idBatchInput").setEditable(oResult.batch_needed);
 
-          console.log(oResult);
           setInputValues(oView, {
             idRequestorInput: oResult.requestor,
             idDescriptionInput: oResult.material_desc,
@@ -196,7 +198,7 @@ sap.ui.define(
             idToleranceInput: oResult.tolerance,
             idFulfilmentDatePicker: oResult.fulfilment_date,
             idRemarkInput: oResult.remark,
-            idProblemInput: oResult.problem,
+            idProblemVhComboBox: oResult.problem,
             idCOGIInput: oResult.cogi,
             idStateInput: oResult.state,
             idLocationInput: oResult.location,
@@ -217,10 +219,24 @@ sap.ui.define(
             .setEditable(!oResult.stock_category_needed);
 
           updateTotalCounter(oView);
+          filterProblemByPlant(oView, globalData.plant);
         })
         .catch((err) => {
           console.error("Action failed:", err);
         });
+    }
+
+    function filterProblemByPlant(oView, sPlant) {
+      var oComboBox = oView.byId("idProblemVhComboBox");
+      var oBinding = oComboBox.getBinding("items");
+
+      if (oBinding) {
+        var aFilters = [];
+        if (sPlant) {
+          aFilters.push(new Filter("Werks", FilterOperator.EQ, sPlant));
+        }
+        oBinding.filter(aFilters);
+      }
     }
 
     // --- Main Controller ---
@@ -248,7 +264,10 @@ sap.ui.define(
           const oComponent = this.getOwnerComponent();
           Navigation.navigate(oTarget, oComponent);
         } catch (error) {
-          console.log("Error during the navigation to Overplus Form: ", error);
+          console.error(
+            "Error during the navigation to Overplus Form: ",
+            error,
+          );
         }
       },
 
@@ -290,7 +309,7 @@ sap.ui.define(
           last_modify:
             this.getView().byId("idLastModifyInput").getValue() || "",
           location: this.getView().byId("idLocationInput").getValue() || "",
-          problem: this.getView().byId("idProblemInput").getValue() || "",
+          problem: this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
           remark: this.getView().byId("idRemarkInput").getValue() || "",
           cogi: this.getView().byId("idCOGIInput").getValue() || "0",
           order_type: this.getView().byId("idOrderTypeInput").getValue() || "",
@@ -304,6 +323,7 @@ sap.ui.define(
           base_unit_of_measure: globalData.base_unit_of_measure,
         };
 
+        console.log(params)
         setActionParameters(oAction, params);
 
         oAction
@@ -367,7 +387,7 @@ sap.ui.define(
           last_modify:
             this.getView().byId("idLastModifyInput").getValue() || "",
           location: this.getView().byId("idLocationInput").getValue() || "",
-          problem: this.getView().byId("idProblemInput").getValue() || "",
+          problem: this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
           remark: this.getView().byId("idRemarkInput").getValue() || "",
           cogi: this.getView().byId("idCOGIInput").getValue() || "0",
           order_type: this.getView().byId("idOrderTypeInput").getValue() || "",
