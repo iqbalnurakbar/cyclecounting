@@ -48,6 +48,7 @@ sap.ui.define(
       plant: "",
       base_unit_of_measure: "",
       cycle_wise: "",
+      material: "",
     };
 
     // --- Field IDs for clearing ---
@@ -116,6 +117,13 @@ sap.ui.define(
             idTotalCountedInput: oResult.total_counted,
             idSAPDifferenceInput: oResult.sap_difference,
           });
+
+          // If cogi_qty is needed, show the input field
+          if (oResult.cogi_qty_needed === true) {
+            oView.byId("idCOGIFormElement").setVisible(true);
+          } else {
+            oView.byId("idCOGIFormElement").setVisible(false);
+          }
         })
         .catch((err) => {
           console.error("Action failed:", err);
@@ -177,6 +185,7 @@ sap.ui.define(
           globalData.plant = oResult.plant;
           globalData.base_unit_of_measure = oResult.base_unit_of_measure;
           globalData.cycle_wise = oResult.cycle_wise;
+          globalData.material = oResult.material;
           // Material input logic
           if (oResult.request_type == "A" || oResult.cycle_wise == "L") {
             oView.byId("idMaterialInput").setValue("");
@@ -272,8 +281,16 @@ sap.ui.define(
       },
 
       onButtonSaveWithoutSubmitPress: function (oEvent) {
-        if (this.getView().byId("idCountedUnitInput").getValue() == null) {
+        const counted_unit_input = this.getView()
+          .byId("idCountedUnitInput")
+          .getValue();
+        if (
+          !counted_unit_input ||
+          counted_unit_input.trim() === "" ||
+          counted_unit_input === "0"
+        ) {
           MessageBox.error("Counted Unit is mandatory!");
+          return;
         }
 
         const oModel = this.getView().getModel();
@@ -309,7 +326,8 @@ sap.ui.define(
           last_modify:
             this.getView().byId("idLastModifyInput").getValue() || "",
           location: this.getView().byId("idLocationInput").getValue() || "",
-          problem: this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
+          problem:
+            this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
           remark: this.getView().byId("idRemarkInput").getValue() || "",
           cogi: this.getView().byId("idCOGIInput").getValue() || "0",
           order_type: this.getView().byId("idOrderTypeInput").getValue() || "",
@@ -323,7 +341,6 @@ sap.ui.define(
           base_unit_of_measure: globalData.base_unit_of_measure,
         };
 
-        console.log(params)
         setActionParameters(oAction, params);
 
         oAction
@@ -350,8 +367,16 @@ sap.ui.define(
       },
 
       onButtonSaveAndSubmitPress: function (oEvent) {
-        if (this.getView().byId("idCountedUnitInput").getValue() == null) {
+        const counted_unit_input = this.getView()
+          .byId("idCountedUnitInput")
+          .getValue();
+        if (
+          !counted_unit_input ||
+          counted_unit_input.trim() === "" ||
+          counted_unit_input === "0"
+        ) {
           MessageBox.error("Counted Unit is mandatory!");
+          return;
         }
 
         const oModel = this.getView().getModel();
@@ -387,7 +412,8 @@ sap.ui.define(
           last_modify:
             this.getView().byId("idLastModifyInput").getValue() || "",
           location: this.getView().byId("idLocationInput").getValue() || "",
-          problem: this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
+          problem:
+            this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
           remark: this.getView().byId("idRemarkInput").getValue() || "",
           cogi: this.getView().byId("idCOGIInput").getValue() || "0",
           order_type: this.getView().byId("idOrderTypeInput").getValue() || "",
@@ -450,6 +476,30 @@ sap.ui.define(
         updateTotalCounter(this.getView());
         getMaterialDescription(this.getView());
         checkBatch(this.getView());
+      },
+
+      onButtonViewMaterialPress: function (oEvent) {
+        MessageToast.show("Viewing Material...");
+        try {
+          var Navigation = sap.ushell.Container.getService("Navigation");
+          var oParams = {
+            Matnr: globalData.material,
+          };
+          const oTarget = {
+            target: {
+              semanticObject: "zwm305loadpic",
+              action: "display",
+            },
+            params: oParams,
+          };
+          const oComponent = this.getOwnerComponent();
+          Navigation.navigate(oTarget, oComponent);
+        } catch (error) {
+          console.error(
+            "Error during the navigation to Load Picture Apps: ",
+            error,
+          );
+        }
       },
     });
   },

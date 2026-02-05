@@ -462,27 +462,38 @@
                 <items>
                     <Button
                         id="idJumpToCountingButton"
-                        icon="sap-icon://zoom-in"
+                        type="Emphasized"
+                        text="{i18n>Overplus}"
                         class="sapUiSmallMargin"
                         press="onButtonJumpToCountingPress"
                     />
                     <Button
                         id="idSaveWithoutSubmitButton"
-                        icon="sap-icon://drill-down"
+                        type="Emphasized"
+                        text="{i18n>Next}"
                         class="sapUiSmallMargin"
                         press="onButtonSaveWithoutSubmitPress"
                     />
                     <Button
                         id="idSaveAndSubmitButton"
-                        icon="sap-icon://save"
+                        type="Emphasized"
+                        text="{i18n>Save}"
                         class="sapUiSmallMargin"
                         press="onButtonSaveAndSubmitPress"
                     />
                     <Button
                         id="idDeleteButton"
-                        icon="sap-icon://delete"
+                        type="Emphasized"
+                        text="{i18n>Delete}"
                         class="sapUiSmallMargin"
                         press="onButtonClearDataPress"
+                    />
+                    <Button
+                        id="idViewMaterialButton"
+                        type="Emphasized"
+                        text="{i18n>ViewMaterial}"
+                        class="sapUiSmallMargin"
+                        press="onButtonViewMaterialPress"
                     />
                 </items>
             </HBox>
