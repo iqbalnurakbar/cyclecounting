@@ -256,7 +256,7 @@ sap.ui.define(
           return;
         }
 
-        MessageToast.show("Jumping to Counting...");
+        MessageToast.show("Jumping to Counting Overplus...");
 
         try {
           var Navigation = sap.ushell.Container.getService("Navigation");
