@@ -339,6 +339,7 @@ sap.ui.define(
           fulfilment_date: getTodayISO(),
           deadline: getTodayISO(),
           base_unit_of_measure: globalData.base_unit_of_measure,
+          cogi_qty_needed: this.getView().byId("idCOGIFormElement").getVisible()
         };
 
         setActionParameters(oAction, params);
@@ -351,7 +352,6 @@ sap.ui.define(
               MessageBox.error(oResult.error_reason);
             } else {
               MessageToast.show("Save without Submitting...");
-              updateTotalCounter(this.getView());
 
               // Erase every editable field into empty
               ALL_INPUT_FIELD_IDS.forEach((id) => {
@@ -359,6 +359,9 @@ sap.ui.define(
                   this.getView().byId(id).setValue("");
                 }
               });
+              updateTotalCounter(this.getView());
+
+
             }
           })
           .catch((err) => {
@@ -425,6 +428,7 @@ sap.ui.define(
           fulfilment_date: getTodayISO(),
           deadline: getTodayISO(),
           base_unit_of_measure: globalData.base_unit_of_measure,
+          cogi_qty_needed: this.getView().byId("idCOGIFormElement").getVisible()
         };
 
         setActionParameters(oAction, params);
