@@ -505,6 +505,10 @@ sap.ui.define(
           );
         }
       },
+
+      onButtonSumPress: function (oEvent) {
+        MessageToast.show("[Not Implemented] Jumping to Difference Summary Dashboard...");
+      }
     });
   },
 );

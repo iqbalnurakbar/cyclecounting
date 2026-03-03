@@ -466,6 +466,7 @@
                         text="{i18n>Overplus}"
                         class="sapUiSmallMargin"
                         press="onButtonJumpToCountingPress"
+                        tooltip="{i18n>OverplusTooltip}"
                     />
                     <Button
                         id="idSaveWithoutSubmitButton"
@@ -473,6 +474,7 @@
                         text="{i18n>Next}"
                         class="sapUiSmallMargin"
                         press="onButtonSaveWithoutSubmitPress"
+                        tooltip="{i18n>NextTooltip}"
                     />
                     <Button
                         id="idSaveAndSubmitButton"
@@ -480,6 +482,15 @@
                         text="{i18n>Save}"
                         class="sapUiSmallMargin"
                         press="onButtonSaveAndSubmitPress"
+                        tooltip="{i18n>SaveTooltip}"
+                    />
+                    <Button
+                        id="idSumButton"
+                        type="Emphasized"
+                        text="{i18n>Sum}"
+                        class="sapUiSmallMargin"
+                        press="onButtonSumPress"
+                        tooltip="{i18n>SumTooltip}"
                     />
                     <Button
                         id="idDeleteButton"
