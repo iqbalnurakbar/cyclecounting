@@ -250,7 +250,7 @@ sap.ui.define(
 
     // --- Main Controller ---
     return PageController.extend("cyclecounting.ext.main.Main", {
-      onButtonJumpToCountingPress: function (oEvent) {
+      onButtonJumpToCountingPress: async function (oEvent) {
         if (globalData.cycle_wise === "L") {
           MessageBox.error("Cycle Wise L is not allowed to Overplus");
           return;
@@ -259,7 +259,7 @@ sap.ui.define(
         MessageToast.show("Jumping to Counting Overplus...");
 
         try {
-          var Navigation = sap.ushell.Container.getService("Navigation");
+          var Navigation = await sap.ushell.Container.getServiceAsync("Navigation");
           var oParams = {
             request_id: globalData.request_id,
           };
@@ -435,7 +435,7 @@ sap.ui.define(
 
         oAction
           .execute()
-          .then(() => {
+          .then(async () => {
             const oResult = oAction.getBoundContext().getObject();
             if (oResult.error === true) {
               MessageBox.error(oResult.error_reason);
@@ -449,7 +449,7 @@ sap.ui.define(
                 }
               });
 
-              var Navigation = sap.ushell.Container.getService("Navigation");
+              var Navigation = await sap.ushell.Container.getServiceAsync("Navigation");
               Navigation.backToPreviousApp();
             }
           })
@@ -482,10 +482,10 @@ sap.ui.define(
         checkBatch(this.getView());
       },
 
-      onButtonViewMaterialPress: function (oEvent) {
+      onButtonViewMaterialPress: async function (oEvent) {
         MessageToast.show("Viewing Material...");
         try {
-          var Navigation = sap.ushell.Container.getService("Navigation");
+          var Navigation = await sap.ushell.Container.getServiceAsync("Navigation");
           var oParams = {
             Matnr: globalData.material,
           };
