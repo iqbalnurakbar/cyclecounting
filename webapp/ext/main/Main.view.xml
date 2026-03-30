@@ -173,7 +173,6 @@
                             </f:FormElement>
                         </f:formElements>
                     </f:FormContainer>
-
                     <!-- Column 2 -->
                     <f:FormContainer id="idColumn2FormContainer">
                         <f:formElements>
@@ -312,7 +311,6 @@
                             </f:FormElement>
                         </f:formElements>
                     </f:FormContainer>
-
                     <!-- Column 3 -->
                     <f:FormContainer id="idColumn3FormContainer">
                         <f:formElements>
@@ -322,11 +320,12 @@
                                 class="sapUiTinyMarginEnd"
                             >
                                 <f:fields>
-                                    <Input
-                                        id="idLocationInput"
-                                        maxLength="4"
-                                        editable="false"
+                                    <ComboBox
+                                        id="idLocationComboBox"
                                         width="100%"
+                                        showSecondaryValues="true"
+                                        change="onLocationChange"
+                                        selectionChange="onLocationChange"
                                     />
                                 </f:fields>
                             </f:FormElement>
@@ -451,7 +450,6 @@
                     </f:FormContainer>
                 </f:formContainers>
             </f:Form>
-
             <!-- Buttons Centered Below Form -->
             <HBox
                 id="idButtonsHBox"

@@ -53,6 +53,12 @@
                     <PropertyRef Name="request_id"/>
                 </Key>
                 <Property Name="request_id" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="request_type" Type="Edm.String" Nullable="false" MaxLength="1"/>
+                <Property Name="cycle_wise" Type="Edm.String" Nullable="false" MaxLength="1"/>
+                <Property Name="batch_needed" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="tolerance" Type="Edm.String" Nullable="false" MaxLength="255"/>
+                <Property Name="stock_category_needed" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="plant" Type="Edm.String" Nullable="false" MaxLength="4"/>
                 <Property Name="counted_unit" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
                 <Property Name="material" Type="Edm.String" Nullable="false" MaxLength="40"/>
                 <Property Name="material_desc" Type="Edm.String" Nullable="false" MaxLength="40"/>
@@ -81,8 +87,18 @@
                 <Property Name="fulfilment_date" Type="Edm.Date"/>
                 <Property Name="deadline" Type="Edm.Date"/>
                 <Property Name="base_unit_of_measure" Type="Edm.String" Nullable="false" MaxLength="3"/>
+                <Property Name="cogi_qty_needed" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="__OperationControl" Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.im_countingOperationControl"/>
                 <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd.zr_wm317_counting.v0001.SAP__Message)" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="sloc_vhType">
+                <Key>
+                    <PropertyRef Name="requestid"/>
+                    <PropertyRef Name="location"/>
+                </Key>
+                <Property Name="requestid" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="location" Type="Edm.String" Nullable="false" MaxLength="4"/>
+                <Property Name="groupid" Type="Edm.String" Nullable="false" MaxLength="10"/>
             </EntityType>
             <EntityType Name="problem_vhType">
                 <Key>
@@ -96,14 +112,10 @@
                 <Property Name="ZdefTy" Type="Edm.String" Nullable="false" MaxLength="25"/>
                 <Property Name="ZrsnCode" Type="Edm.String" Nullable="false" MaxLength="8"/>
                 <Property Name="ZrsnDesc" Type="Edm.String" Nullable="false" MaxLength="40"/>
-                <Property Name="Zdeactivate" Type="Edm.String" Nullable="false" MaxLength="1"/>
-                <Property Name="Zccode" Type="Edm.String" Nullable="false" MaxLength="10"/>
-                <Property Name="Zcdescr" Type="Edm.String" Nullable="false" MaxLength="10"/>
             </EntityType>
             <ComplexType Name="im_countingOperationControl">
                 <Property Name="check_batch" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="get_material_desc" Type="Edm.Boolean" Nullable="false"/>
-                <Property Name="preload_data" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="sap_qty_side_effect" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="save_and_submit" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="save_without_submit" Type="Edm.Boolean" Nullable="false"/>
@@ -119,6 +131,7 @@
                 <Property Name="batch" Type="Edm.String" Nullable="false" MaxLength="10"/>
                 <Property Name="batch_needed" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="cogi" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
+                <Property Name="cogi_qty_needed" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="counted_unit" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
                 <Property Name="cycle_wise" Type="Edm.String" Nullable="false" MaxLength="1"/>
                 <Property Name="deadline" Type="Edm.Date"/>
@@ -154,6 +167,7 @@
             <ComplexType Name="ZA_WM317_OUTPUT">
                 <Property Name="error" Type="Edm.Boolean" Nullable="false"/>
                 <Property Name="error_reason" Type="Edm.String" Nullable="false" MaxLength="256"/>
+                <Property Name="request_id" Type="Edm.String" Nullable="false" MaxLength="20"/>
             </ComplexType>
             <ComplexType Name="SAP__Message">
                 <Property Name="code" Type="Edm.String" Nullable="false"/>
@@ -195,6 +209,7 @@
                 <Parameter Name="fulfilment_date" Type="Edm.Date" Nullable="true"/>
                 <Parameter Name="deadline" Type="Edm.Date" Nullable="true"/>
                 <Parameter Name="base_unit_of_measure" Type="Edm.String" Nullable="false" MaxLength="3"/>
+                <Parameter Name="cogi_qty_needed" Type="Edm.Boolean" Nullable="false"/>
                 <ReturnType Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.ZA_WM317_OUTPUT" Nullable="false"/>
             </Action>
             <Action Name="sap_qty_side_effect" IsBound="true">
@@ -224,10 +239,6 @@
                 <Parameter Name="plant" Type="Edm.String" Nullable="false" MaxLength="4"/>
                 <Parameter Name="part_type" Type="Edm.String" Nullable="false" MaxLength="4"/>
                 <ReturnType Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.ZA_WM317_MATERIAL" Nullable="false"/>
-            </Action>
-            <Action Name="preload_data" IsBound="true">
-                <Parameter Name="_it" Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.im_countingType" Nullable="false"/>
-                <ReturnType Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.ZA_WM317_COUNTING_PRELOAD" Nullable="false"/>
             </Action>
             <Action Name="save_and_submit" IsBound="true">
                 <Parameter Name="_it" Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.im_countingType" Nullable="false"/>
@@ -260,11 +271,13 @@
                 <Parameter Name="fulfilment_date" Type="Edm.Date" Nullable="true"/>
                 <Parameter Name="deadline" Type="Edm.Date" Nullable="true"/>
                 <Parameter Name="base_unit_of_measure" Type="Edm.String" Nullable="false" MaxLength="3"/>
+                <Parameter Name="cogi_qty_needed" Type="Edm.Boolean" Nullable="false"/>
                 <ReturnType Type="com.sap.gateway.srvd.zr_wm317_counting.v0001.ZA_WM317_OUTPUT" Nullable="false"/>
             </Action>
             <EntityContainer Name="Container">
                 <EntitySet Name="im_counting" EntityType="com.sap.gateway.srvd.zr_wm317_counting.v0001.im_countingType"/>
                 <EntitySet Name="problem_vh" EntityType="com.sap.gateway.srvd.zr_wm317_counting.v0001.problem_vhType"/>
+                <EntitySet Name="sloc_vh" EntityType="com.sap.gateway.srvd.zr_wm317_counting.v0001.sloc_vhType"/>
             </EntityContainer>
             <Annotations Target="SAP__self.ZA_WM317_COUNTING_PRELOAD/cogi">
                 <Annotation Term="SAP__measures.Unit" Path="base_unit_of_measure"/>
@@ -286,6 +299,10 @@
             </Annotations>
             <Annotations Target="SAP__self.ZA_WM317_COUNTING_PRELOAD/total_counted">
                 <Annotation Term="SAP__measures.Unit" Path="base_unit_of_measure"/>
+            </Annotations>
+            <Annotations Target="SAP__self.im_countingType/plant">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="工厂"/>
             </Annotations>
             <Annotations Target="SAP__self.im_countingType/counted_unit">
                 <Annotation Term="SAP__measures.Unit" Path="base_unit_of_measure"/>
@@ -329,9 +346,6 @@
             </Annotations>
             <Annotations Target="SAP__self.get_material_desc(SAP__self.im_countingType)">
                 <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/get_material_desc"/>
-            </Annotations>
-            <Annotations Target="SAP__self.preload_data(SAP__self.im_countingType)">
-                <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/preload_data"/>
             </Annotations>
             <Annotations Target="SAP__self.save_and_submit(SAP__self.im_countingType)">
                 <Annotation Term="SAP__core.OperationAvailable" Path="_it/__OperationControl/save_and_submit"/>
@@ -452,6 +466,39 @@
                 <Annotation Term="SAP__capabilities.KeyAsSegmentSupported"/>
                 <Annotation Term="SAP__capabilities.AsynchronousRequestsSupported"/>
             </Annotations>
+            <Annotations Target="SAP__self.sloc_vhType">
+                <Annotation Term="SAP__common.Label" String="Storage location dropdown"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/sloc_vh">
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection/>
+                </Annotation>
+            </Annotations>
             <Annotations Target="SAP__self.problem_vhType/Werks">
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="工厂"/>
@@ -471,20 +518,6 @@
             <Annotations Target="SAP__self.problem_vhType/ZrsnDesc">
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Reason Description"/>
-            </Annotations>
-            <Annotations Target="SAP__self.problem_vhType/Zdeactivate">
-                <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="De-Activate"/>
-            </Annotations>
-            <Annotations Target="SAP__self.problem_vhType/Zccode">
-                <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="Correction Code"/>
-            </Annotations>
-            <Annotations Target="SAP__self.problem_vhType/Zcdescr">
-                <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="Correction Code Desc"/>
-                <Annotation Term="SAP__common.Heading" String="Correction Code Description"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Correction Code Description"/>
             </Annotations>
             <Annotations Target="SAP__self.problem_vhType">
                 <Annotation Term="SAP__common.Label" String="Dropdown for Problem Field in WM317"/>
@@ -519,8 +552,20 @@
                     <Collection/>
                 </Annotation>
             </Annotations>
+            <Annotations Target="SAP__self.im_countingType/batch_needed">
+                <Annotation Term="SAP__common.Label" String="布尔值"/>
+                <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
+            </Annotations>
+            <Annotations Target="SAP__self.im_countingType/stock_category_needed">
+                <Annotation Term="SAP__common.Label" String="布尔值"/>
+                <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
+            </Annotations>
             <Annotations Target="SAP__self.im_countingType/remark">
                 <Annotation Term="SAP__common.Label" String="Long Text"/>
+            </Annotations>
+            <Annotations Target="SAP__self.im_countingType/cogi_qty_needed">
+                <Annotation Term="SAP__common.Label" String="布尔值"/>
+                <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
             </Annotations>
             <Annotations Target="SAP__self.im_countingType/__OperationControl/check_batch">
                 <Annotation Term="SAP__common.Label" String="Dyn. Action Control"/>
@@ -528,11 +573,6 @@
                 <Annotation Term="SAP__common.QuickInfo" String="Dynamic Action Property"/>
             </Annotations>
             <Annotations Target="SAP__self.im_countingType/__OperationControl/get_material_desc">
-                <Annotation Term="SAP__common.Label" String="Dyn. Action Control"/>
-                <Annotation Term="SAP__common.Heading" String="Dynamic Action Control"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Dynamic Action Property"/>
-            </Annotations>
-            <Annotations Target="SAP__self.im_countingType/__OperationControl/preload_data">
                 <Annotation Term="SAP__common.Label" String="Dyn. Action Control"/>
                 <Annotation Term="SAP__common.Heading" String="Dynamic Action Control"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Dynamic Action Property"/>
@@ -562,11 +602,6 @@
                 <Annotation Term="SAP__common.Heading" String="Dynamic Action Control"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Dynamic Action Property"/>
             </Annotations>
-            <Annotations Target="SAP__self.im_countingOperationControl/preload_data">
-                <Annotation Term="SAP__common.Label" String="Dyn. Action Control"/>
-                <Annotation Term="SAP__common.Heading" String="Dynamic Action Control"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Dynamic Action Property"/>
-            </Annotations>
             <Annotations Target="SAP__self.im_countingOperationControl/sap_qty_side_effect">
                 <Annotation Term="SAP__common.Label" String="Dyn. Action Control"/>
                 <Annotation Term="SAP__common.Heading" String="Dynamic Action Control"/>
@@ -587,6 +622,10 @@
                 <Annotation Term="SAP__common.Heading" String="计"/>
             </Annotations>
             <Annotations Target="SAP__self.ZA_WM317_COUNTING_PRELOAD/batch_needed">
+                <Annotation Term="SAP__common.Label" String="布尔值"/>
+                <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
+            </Annotations>
+            <Annotations Target="SAP__self.ZA_WM317_COUNTING_PRELOAD/cogi_qty_needed">
                 <Annotation Term="SAP__common.Label" String="布尔值"/>
                 <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
             </Annotations>
@@ -611,6 +650,10 @@
                 <Annotation Term="SAP__common.Label" String="基本计量单位"/>
                 <Annotation Term="SAP__common.Heading" String="计"/>
             </Annotations>
+            <Annotations Target="SAP__self.save_without_submit(SAP__self.im_countingType)/cogi_qty_needed">
+                <Annotation Term="SAP__common.Label" String="布尔值"/>
+                <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
+            </Annotations>
             <Annotations Target="SAP__self.sap_qty_side_effect(SAP__self.im_countingType)/batch_managed">
                 <Annotation Term="SAP__common.Label" String="布尔值"/>
                 <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
@@ -628,6 +671,10 @@
             <Annotations Target="SAP__self.save_and_submit(SAP__self.im_countingType)/base_unit_of_measure">
                 <Annotation Term="SAP__common.Label" String="基本计量单位"/>
                 <Annotation Term="SAP__common.Heading" String="计"/>
+            </Annotations>
+            <Annotations Target="SAP__self.save_and_submit(SAP__self.im_countingType)/cogi_qty_needed">
+                <Annotation Term="SAP__common.Label" String="布尔值"/>
+                <Annotation Term="SAP__common.QuickInfo" String="布尔值：真/假"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>

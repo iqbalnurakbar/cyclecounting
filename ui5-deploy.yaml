@@ -20,6 +20,6 @@ builder:
           name: ZWM317COUNTING
           description: Cycle Counting IM Form
           package: Z_S4HANA_FIORI
-          transport: FDCK900115
+          transport: FDCK900182
         exclude:
           - /test/

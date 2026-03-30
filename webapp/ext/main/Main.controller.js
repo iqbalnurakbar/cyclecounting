@@ -64,7 +64,7 @@ sap.ui.define(
       "idFulfilmentDatePicker",
       "idGroupIDInput",
       "idLastModifyInput",
-      "idLocationInput",
+      "idLocationComboBox",
       "idMaterialInput",
       "idOrderTypeInput",
       "idPartTypeInput",
@@ -98,7 +98,7 @@ sap.ui.define(
         material: oView.byId("idMaterialInput").getValue(),
         batch: oView.byId("idBatchInput").getValue(),
         plant: globalData.plant,
-        storage_location: oView.byId("idLocationInput").getValue(),
+        storage_location: oView.byId("idLocationComboBox").getSelectedKey(),
         special_stock_number: oView
           .byId("idSpecialStockNumberInput")
           .getValue(),
@@ -173,67 +173,69 @@ sap.ui.define(
         });
     }
 
-    function preloadData(oView) {
-      const oModel = oView.getModel();
-      const linkContext = `/im_counting('${globalData.request_id}')/com.sap.gateway.srvd.zr_wm317_counting.v0001.preload_data(...)`;
-      const oAction = oModel.bindContext(linkContext, null);
+    // function preloadData(oView) {
+    //   const oModel = oView.getModel();
+    //   const linkContext = `/im_counting('${globalData.request_id}')/com.sap.gateway.srvd.zr_wm317_counting.v0001.preload_data(...)`;
+    //   const oAction = oModel.bindContext(linkContext, null);
 
-      oAction
-        .execute()
-        .then(() => {
-          const oResult = oAction.getBoundContext().getObject();
-          globalData.plant = oResult.plant;
-          globalData.base_unit_of_measure = oResult.base_unit_of_measure;
-          globalData.cycle_wise = oResult.cycle_wise;
-          globalData.material = oResult.material;
-          // Material input logic
-          if (oResult.request_type == "A" || oResult.cycle_wise == "L") {
-            oView.byId("idMaterialInput").setValue("");
-            oView.byId("idMaterialInput").setEditable(true);
-          } else {
-            oView.byId("idMaterialInput").setValue(oResult.material);
-            oView.byId("idMaterialInput").setEditable(false);
-          }
+    //   oAction
+    //     .execute()
+    //     .then(() => {
+    //       const oResult = oAction.getBoundContext().getObject();
 
-          oView.byId("idBatchInput").setEditable(oResult.batch_needed);
+    //       console.log("preload_old: ", oResult);
+    //       globalData.plant = oResult.plant;
+    //       globalData.base_unit_of_measure = oResult.base_unit_of_measure;
+    //       globalData.cycle_wise = oResult.cycle_wise;
+    //       globalData.material = oResult.material;
+    //       // Material input logic
+    //       if (oResult.request_type == "A" || oResult.cycle_wise == "L") {
+    //         oView.byId("idMaterialInput").setValue("");
+    //         oView.byId("idMaterialInput").setEditable(true);
+    //       } else {
+    //         oView.byId("idMaterialInput").setValue(oResult.material);
+    //         oView.byId("idMaterialInput").setEditable(false);
+    //       }
 
-          setInputValues(oView, {
-            idRequestorInput: oResult.requestor,
-            idDescriptionInput: oResult.material_desc,
-            idLastModifyInput: oResult.last_modify,
-            idScheduleInput: oResult.zschedule,
-            idOrderTypeInput: oResult.item_size,
-            idSiteInput: oResult.site,
-            idToleranceInput: oResult.tolerance,
-            idFulfilmentDatePicker: oResult.fulfilment_date,
-            idRemarkInput: oResult.remark,
-            idProblemVhComboBox: oResult.problem,
-            idCOGIInput: oResult.cogi,
-            idStateInput: oResult.state,
-            idLocationInput: oResult.location,
-            idGroupIDInput: oResult.group_id,
-            idSAPQtyInput: oResult.sap_quantity,
-            idDifferenceValueInput: oResult.difference_value,
-            idDifferenceQtyInput: oResult.difference,
-            idTotalCountedInput: oResult.total_counted,
-            idSAPDifferenceInput: oResult.sap_difference,
-            idRequestDatePicker: oResult.request_date,
-            idMaterialInput: oResult.material,
-            idBatchInput: oResult.batch,
-            idPartTypeInput: oResult.part_type,
-          });
+    //       oView.byId("idBatchInput").setEditable(oResult.batch_needed);
 
-          oView
-            .byId("idStockCategoryInput")
-            .setEditable(!oResult.stock_category_needed);
+    //       setInputValues(oView, {
+    //         idRequestorInput: oResult.requestor,
+    //         idDescriptionInput: oResult.material_desc,
+    //         idLastModifyInput: oResult.last_modify,
+    //         idScheduleInput: oResult.zschedule,
+    //         idOrderTypeInput: oResult.item_size,
+    //         idSiteInput: oResult.site,
+    //         idToleranceInput: oResult.tolerance,
+    //         idFulfilmentDatePicker: oResult.fulfilment_date,
+    //         idRemarkInput: oResult.remark,
+    //         idProblemVhComboBox: oResult.problem,
+    //         idCOGIInput: oResult.cogi,
+    //         idStateInput: oResult.state,
+    //         idLocationInput: oResult.location,
+    //         idGroupIDInput: oResult.group_id,
+    //         idSAPQtyInput: oResult.sap_quantity,
+    //         idDifferenceValueInput: oResult.difference_value,
+    //         idDifferenceQtyInput: oResult.difference,
+    //         idTotalCountedInput: oResult.total_counted,
+    //         idSAPDifferenceInput: oResult.sap_difference,
+    //         idRequestDatePicker: oResult.request_date,
+    //         idMaterialInput: oResult.material,
+    //         idBatchInput: oResult.batch,
+    //         idPartTypeInput: oResult.part_type,
+    //       });
 
-          updateTotalCounter(oView);
-          filterProblemByPlant(oView, globalData.plant);
-        })
-        .catch((err) => {
-          console.error("Action failed:", err);
-        });
-    }
+    //       oView
+    //         .byId("idStockCategoryInput")
+    //         .setEditable(!oResult.stock_category_needed);
+
+    //       updateTotalCounter(oView);
+    //       filterProblemByPlant(oView, globalData.plant);
+    //     })
+    //     .catch((err) => {
+    //       console.error("Action failed:", err);
+    //     });
+    // }
 
     function filterProblemByPlant(oView, sPlant) {
       var oComboBox = oView.byId("idProblemVhComboBox");
@@ -259,7 +261,8 @@ sap.ui.define(
         MessageToast.show("Jumping to Counting Overplus...");
 
         try {
-          var Navigation = await sap.ushell.Container.getServiceAsync("Navigation");
+          var Navigation =
+            await sap.ushell.Container.getServiceAsync("Navigation");
           var oParams = {
             request_id: globalData.request_id,
           };
@@ -325,7 +328,8 @@ sap.ui.define(
           requestor: this.getView().byId("idRequestorInput").getValue() || "",
           last_modify:
             this.getView().byId("idLastModifyInput").getValue() || "",
-          location: this.getView().byId("idLocationInput").getValue() || "",
+          location:
+            this.getView().byId("idLocationComboBox").getSelectedKey() || "",
           problem:
             this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
           remark: this.getView().byId("idRemarkInput").getValue() || "",
@@ -339,7 +343,9 @@ sap.ui.define(
           fulfilment_date: getTodayISO(),
           deadline: getTodayISO(),
           base_unit_of_measure: globalData.base_unit_of_measure,
-          cogi_qty_needed: this.getView().byId("idCOGIFormElement").getVisible()
+          cogi_qty_needed: this.getView()
+            .byId("idCOGIFormElement")
+            .getVisible(),
         };
 
         setActionParameters(oAction, params);
@@ -360,8 +366,6 @@ sap.ui.define(
                 }
               });
               updateTotalCounter(this.getView());
-
-
             }
           })
           .catch((err) => {
@@ -414,7 +418,8 @@ sap.ui.define(
           requestor: this.getView().byId("idRequestorInput").getValue() || "",
           last_modify:
             this.getView().byId("idLastModifyInput").getValue() || "",
-          location: this.getView().byId("idLocationInput").getValue() || "",
+          location:
+            this.getView().byId("idLocationComboBox").getSelectedKey() || "",
           problem:
             this.getView().byId("idProblemVhComboBox").getSelectedKey() || "",
           remark: this.getView().byId("idRemarkInput").getValue() || "",
@@ -428,7 +433,9 @@ sap.ui.define(
           fulfilment_date: getTodayISO(),
           deadline: getTodayISO(),
           base_unit_of_measure: globalData.base_unit_of_measure,
-          cogi_qty_needed: this.getView().byId("idCOGIFormElement").getVisible()
+          cogi_qty_needed: this.getView()
+            .byId("idCOGIFormElement")
+            .getVisible(),
         };
 
         setActionParameters(oAction, params);
@@ -449,7 +456,8 @@ sap.ui.define(
                 }
               });
 
-              var Navigation = await sap.ushell.Container.getServiceAsync("Navigation");
+              var Navigation =
+                await sap.ushell.Container.getServiceAsync("Navigation");
               Navigation.backToPreviousApp();
             }
           })
@@ -469,7 +477,9 @@ sap.ui.define(
 
       onAfterRendering: function () {
         globalData.request_id = getRequestId();
-        preloadData(this.getView());
+        this._preloadDataCounting(globalData.request_id);
+        this._loadSlocComboBox(globalData.request_id);
+        // preloadData(this.getView());
       },
 
       onInputForSAPQtyChange: function (oEvent) {
@@ -485,7 +495,8 @@ sap.ui.define(
       onButtonViewMaterialPress: async function (oEvent) {
         MessageToast.show("Viewing Material...");
         try {
-          var Navigation = await sap.ushell.Container.getServiceAsync("Navigation");
+          var Navigation =
+            await sap.ushell.Container.getServiceAsync("Navigation");
           var oParams = {
             Matnr: globalData.material,
           };
@@ -506,9 +517,150 @@ sap.ui.define(
         }
       },
 
-      onButtonSumPress: function (oEvent) {
-        MessageToast.show("[Not Implemented] Jumping to Difference Summary Dashboard...");
-      }
+      onButtonSumPress: async function (oEvent) {
+        MessageToast.show("Navigating to Difference Summary Dashboard...");
+        try {
+          var Navigation =
+            await sap.ushell.Container.getServiceAsync("Navigation");
+          var oParams = {
+            request_id: globalData.request_id,
+          };
+          const oTarget = {
+            target: {
+              semanticObject: "zwm104diffsumdashboard",
+              action: "display",
+            },
+            params: oParams,
+          };
+          const oComponent = this.getOwnerComponent();
+          Navigation.navigate(oTarget, oComponent);
+        } catch (error) {
+          console.error(
+            "Error during the navigation to Difference Summary Dashboard: ",
+            error,
+          );
+        }
+      },
+
+      _preloadDataCounting: function (sRequestId) {
+        if (!sRequestId) return;
+
+        const oView = this.getView();
+        const oModel = oView.getModel();
+        const aFilters = [
+          new Filter("request_id", FilterOperator.EQ, sRequestId.trim()),
+        ];
+
+        oModel
+          .bindList("/im_counting", undefined, undefined, aFilters)
+          .requestContexts(0, 1)
+          .then((aContexts) => {
+            const oResult = aContexts[0].getObject();
+
+            // Update global state
+            globalData.plant = oResult.plant;
+            globalData.base_unit_of_measure = oResult.base_unit_of_measure;
+            globalData.cycle_wise = oResult.cycle_wise;
+            globalData.material = oResult.material;
+
+            // Material input logic
+            if (oResult.request_type == "A" || oResult.cycle_wise == "L") {
+              oView.byId("idMaterialInput").setValue("");
+              oView.byId("idMaterialInput").setEditable(true);
+            } else {
+              oView.byId("idMaterialInput").setValue(oResult.material);
+              oView.byId("idMaterialInput").setEditable(false);
+            }
+
+            oView.byId("idBatchInput").setEditable(oResult.batch_needed);
+            oView
+              .byId("idStockCategoryInput")
+              .setEditable(!oResult.stock_category_needed);
+
+            setInputValues(oView, {
+              idRequestorInput: oResult.requestor,
+              idDescriptionInput: oResult.material_desc,
+              idLastModifyInput: oResult.last_modify,
+              idScheduleInput: oResult.zschedule,
+              idOrderTypeInput: oResult.order_type,
+              idSiteInput: oResult.site,
+              idToleranceInput: oResult.tolerance,
+              idFulfilmentDatePicker: oResult.fulfilment_date,
+              idRemarkInput: oResult.remark,
+              idProblemVhComboBox: oResult.problem,
+              idCOGIInput: oResult.cogi,
+              idStateInput: oResult.state,
+              idLocationComboBox: oResult.location,
+              idGroupIDInput: oResult.group_id,
+              idSAPQtyInput: oResult.sap_quantity,
+              idDifferenceValueInput: oResult.difference_value,
+              idDifferenceQtyInput: oResult.difference,
+              idTotalCountedInput: oResult.total_counted,
+              idSAPDifferenceInput: oResult.sap_difference,
+              idRequestDatePicker: oResult.request_date,
+              idMaterialInput: oResult.material,
+              idBatchInput: oResult.batch,
+              idPartTypeInput: oResult.part_type,
+            });
+
+            updateTotalCounter(oView);
+            filterProblemByPlant(oView, globalData.plant);
+          })
+          .catch((oErr) => console.error("Load Counting failed:", oErr));
+      },
+
+      _loadSlocComboBox: function (sRequestId) {
+        if (!sRequestId) return;
+
+        const oView = this.getView();
+        const oModel = oView.getModel();
+        const oComboBox = oView.byId("idLocationComboBox");
+
+        // Bind items with filter request_id
+        oComboBox.bindItems({
+          path: "/sloc_vh",
+          filters: [
+            new Filter("requestid", FilterOperator.EQ, sRequestId.trim()),
+          ],
+          template: new sap.ui.core.ListItem({
+            key: "{location}",
+            text: "{location}",
+            additionalText: "{requestid}",
+          }),
+        });
+      },
+
+      onLocationChange: function (oEvent) {
+        const oSelectedItem = oEvent.getParameter("selectedItem");
+
+        if (!oSelectedItem) return;
+
+        const oContext = oSelectedItem.getBindingContext();
+        const oData = oContext.getObject();
+
+        this._navigateToRequestId(oData.requestid);
+      },
+
+      _navigateToRequestId: async function (sRequestId) {
+        if (!sRequestId) return;
+
+        try {
+          const Navigation =
+            await sap.ushell.Container.getServiceAsync("Navigation");
+
+          Navigation.navigate({
+            target: {
+              semanticObject: "zcyclecountingim", // ← semantic object app kamu
+              action: "display",
+            },
+            params: {
+              request_id: sRequestId,
+            },
+          });
+        } catch (oErr) {
+          console.error("Navigation failed:", oErr);
+        }
+      },
     });
   },
 );
