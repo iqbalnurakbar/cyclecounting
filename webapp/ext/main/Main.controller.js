@@ -478,7 +478,7 @@ sap.ui.define(
       onAfterRendering: function () {
         globalData.request_id = getRequestId();
         this._preloadDataCounting(globalData.request_id);
-        this._loadSlocComboBox(globalData.request_id);
+        this._filterLocByRequestId(globalData.request_id);
         // preloadData(this.getView());
       },
 
@@ -609,25 +609,22 @@ sap.ui.define(
           .catch((oErr) => console.error("Load Counting failed:", oErr));
       },
 
-      _loadSlocComboBox: function (sRequestId) {
+      _filterLocByRequestId: function (sRequestId) {
         if (!sRequestId) return;
 
         const oView = this.getView();
-        const oModel = oView.getModel();
         const oComboBox = oView.byId("idLocationComboBox");
 
-        // Bind items with filter request_id
-        oComboBox.bindItems({
-          path: "/sloc_vh",
-          filters: [
+        const oBinding = oComboBox.getBinding("items");
+
+        if (oBinding) {
+          var aFilters = [];
+          aFilters.push(
             new Filter("requestid", FilterOperator.EQ, sRequestId.trim()),
-          ],
-          template: new sap.ui.core.ListItem({
-            key: "{location}",
-            text: "{location}",
-            additionalText: "{requestid}",
-          }),
-        });
+          );
+
+          oBinding.filter(aFilters);
+        }
       },
 
       onLocationChange: function (oEvent) {

@@ -326,7 +326,15 @@
                                         showSecondaryValues="true"
                                         change="onLocationChange"
                                         selectionChange="onLocationChange"
-                                    />
+                                        items="{/sloc_vh}"
+                                    >
+                                        <core:ListItem
+                                            id="idLocationListItem"
+                                            key="{location}"
+                                            text="{location}"
+                                            additionalText="{requestid}"
+                                        />
+                                    </ComboBox>
                                 </f:fields>
                             </f:FormElement>
                             <f:FormElement
