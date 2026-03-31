@@ -475,14 +475,6 @@
                         tooltip="{i18n>OverplusTooltip}"
                     />
                     <Button
-                        id="idSaveWithoutSubmitButton"
-                        type="Emphasized"
-                        text="{i18n>Next}"
-                        class="sapUiSmallMargin"
-                        press="onButtonSaveWithoutSubmitPress"
-                        tooltip="{i18n>NextTooltip}"
-                    />
-                    <Button
                         id="idSaveAndSubmitButton"
                         type="Emphasized"
                         text="{i18n>Save}"

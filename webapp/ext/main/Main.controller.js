@@ -283,7 +283,7 @@ sap.ui.define(
         }
       },
 
-      onButtonSaveWithoutSubmitPress: function (oEvent) {
+      onButtonSaveWithoutSubmitPress: function () {
         const counted_unit_input = this.getView()
           .byId("idCountedUnitInput")
           .getValue();
@@ -473,6 +473,7 @@ sap.ui.define(
 
       onInit: function () {
         PageController.prototype.onInit.apply(this, arguments);
+        this._attachInputEventDelegates();
       },
 
       onAfterRendering: function () {
@@ -656,6 +657,19 @@ sap.ui.define(
           });
         } catch (oErr) {
           console.error("Navigation failed:", oErr);
+        }
+      },
+
+      _attachInputEventDelegates: function () {
+        const oMainPage = this.byId("idMainPage");
+        if (oMainPage) {
+          oMainPage.addEventDelegate({
+            onkeydown: (oEvent) => {
+              if (oEvent.key === "Enter") {
+                this.onButtonSaveWithoutSubmitPress();
+              }
+            },
+          });
         }
       },
     });
