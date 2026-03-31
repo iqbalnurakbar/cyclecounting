@@ -647,7 +647,7 @@ sap.ui.define(
 
           Navigation.navigate({
             target: {
-              semanticObject: "zcyclecountingim", // ← semantic object app kamu
+              semanticObject: "zcyclecountingim", // ← semantic object
               action: "display",
             },
             params: {
