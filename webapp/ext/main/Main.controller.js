@@ -157,9 +157,9 @@ sap.ui.define(
       const linkContext = `/im_counting('${globalData.request_id}')/com.sap.gateway.srvd.zr_wm317_counting.v0001.check_batch(...)`;
       const oAction = oModel.bindContext(linkContext, null);
       setActionParameters(oAction, {
-        material: oView.byId("idMaterialInput").getValue(),
+        material: oView.byId("idMaterialInput").getValue() || "",
         material_desc: "",
-        plant: globalData.plant,
+        plant: globalData.plant || "",
         part_type: "",
       });
       oAction
@@ -264,7 +264,7 @@ sap.ui.define(
           var Navigation =
             await sap.ushell.Container.getServiceAsync("Navigation");
           var oParams = {
-            request_id: globalData.request_id,
+            request_id: globalData.request_id || "",
           };
           const oTarget = {
             target: {
@@ -478,7 +478,7 @@ sap.ui.define(
 
       onAfterRendering: function () {
         globalData.request_id = getRequestId();
-        this._preloadDataCounting(globalData.request_id);
+        this._preloadDataCounting(globalData.request_id || "");
         this._filterLocByRequestId(globalData.request_id);
         // preloadData(this.getView());
       },
@@ -494,12 +494,15 @@ sap.ui.define(
       },
 
       onButtonViewMaterialPress: async function (oEvent) {
+        const sMaterial = this.getView().byId("idMaterialInput").getValue();
+
+        console.log("Material: ", sMaterial);
         MessageToast.show("Viewing Material...");
         try {
           var Navigation =
             await sap.ushell.Container.getServiceAsync("Navigation");
           var oParams = {
-            Matnr: globalData.material,
+            Matnr: sMaterial,
           };
           const oTarget = {
             target: {
@@ -544,7 +547,6 @@ sap.ui.define(
       },
 
       _preloadDataCounting: function (sRequestId) {
-        if (!sRequestId) return;
 
         const oView = this.getView();
         const oModel = oView.getModel();
